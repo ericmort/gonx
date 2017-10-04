@@ -23,7 +23,7 @@ func NewEmptyEntry() *Entry {
 
 // NewEntry creates an Entry with fiven fields
 func NewEntry(fields Fields) *Entry {
-	return &Entry{fields}
+	return &Entry{fields, nil}
 }
 
 func (entry *Entry) Error() error {
