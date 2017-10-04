@@ -13,6 +13,7 @@ type Fields map[string]string
 // threating this as a map, because inner representation is in design.
 type Entry struct {
 	fields Fields
+	err    error
 }
 
 // NewEmptyEntry creates an empty Entry to be filled later
