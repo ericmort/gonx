@@ -19,12 +19,24 @@ type Parser struct {
 	regexp *regexp.Regexp
 }
 
+type Parsers []*Parser
+
 // NewParser returns a new Parser, use given log format to create its internal
 // strings parsing regexp.
 func NewParser(format string) *Parser {
 	re := regexp.MustCompile(`\\\$([a-z_]+)(\\?(.))`).ReplaceAllString(
 		regexp.QuoteMeta(format+" "), "(?P<$1>[^$3]*)$2")
 	return &Parser{format, regexp.MustCompile(fmt.Sprintf("^%v", strings.Trim(re, " ")))}
+}
+
+func (parsers Parsers) ParseString(line string) (entry *Entry, err error) {
+	for _, parser := range parsers {
+		entry, err = parser.ParseString(line)
+		if err == nil {
+			return
+		}
+	}
+	return
 }
 
 // ParseString parses a log file line using internal format regexp. If a line
