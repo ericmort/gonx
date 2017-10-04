@@ -18,7 +18,7 @@ type Entry struct {
 
 // NewEmptyEntry creates an empty Entry to be filled later
 func NewEmptyEntry() *Entry {
-	return &Entry{make(Fields)}
+	return &Entry{make(Fields), nil}
 }
 
 // NewEntry creates an Entry with fiven fields
