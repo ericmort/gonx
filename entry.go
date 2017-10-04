@@ -35,6 +35,10 @@ func (entry *Entry) Field(name string) (value string, err error) {
 	return
 }
 
+func (entry *Entry) Fields() map[string]string {
+	return entry.fields
+}
+
 // FloatField returns an entry field value as float64. Return nil if field does not exist
 // and conversion error if cannot cast a type.
 func (entry *Entry) FloatField(name string) (value float64, err error) {
