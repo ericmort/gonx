@@ -25,6 +25,10 @@ func NewEntry(fields Fields) *Entry {
 	return &Entry{fields}
 }
 
+func (entry *Entry) Error() error {
+	return entry.err
+}
+
 // Field returns an entry field value by name or empty string and error if it
 // does not exist.
 func (entry *Entry) Field(name string) (value string, err error) {
