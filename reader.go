@@ -8,6 +8,7 @@ import (
 type Reader struct {
 	file    io.Reader
 	parser  StringParser
+	parsers Parsers
 	entries chan *Entry
 }
 
@@ -21,6 +22,18 @@ func NewParserReader(logFile io.Reader, parser StringParser) *Reader {
 	return &Reader{
 		file:   logFile,
 		parser: parser,
+	}
+}
+
+// Creates reader for custom log format.
+func NewMultiReader(logFile io.Reader, formats []string) *Reader {
+	parsers := make([]*Parser, len(formats))
+	for i, format := range formats {
+		parsers[i] = NewParser(format)
+	}
+	return &Reader{
+		file:    logFile,
+		parsers: parsers,
 	}
 }
 
@@ -41,7 +54,7 @@ func NewNginxReader(logFile io.Reader, nginxConf io.Reader, formatName string) (
 // Read next parsed Entry from the log file. Return EOF if there are no Entries to read.
 func (r *Reader) Read() (entry *Entry, err error) {
 	if r.entries == nil {
-		r.entries = MapReduce(r.file, r.parser, new(ReadAll))
+		r.entries = MapReduce(r.file, r.parsers, new(ReadAll))
 	}
 	entry, ok := <-r.entries
 	if !ok {
